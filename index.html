@@ -29,21 +29,30 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 .kpi .name{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.kpi .val{font-size:22px;font-weight:800;margin-top:5px}
 .kpi .sub{font-size:11px;color:var(--muted);margin-top:3px}
 .breakdown{margin-top:12px}.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #29323b;font-size:13px}.row:last-child{border-bottom:0}.row span:first-child{color:var(--muted)}.positive{color:var(--good)}.negative{color:var(--bad)}.accent{color:var(--accent)}
-.saved{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.saved select{min-width:0;font-size:13px}.saved-list{display:flex;flex-direction:column;gap:7px;margin-top:10px;max-height:220px;overflow:auto}
+.saved{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px}.saved select{min-width:0;font-size:12px;padding-left:7px;padding-right:7px}.saved-list{display:flex;flex-direction:column;gap:7px;margin-top:10px;max-height:220px;overflow:auto}
 .saved-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#121820;border:1px solid var(--line);border-radius:12px;padding:9px}
 .saved-main{min-width:0}.saved-main strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.saved-main span{font-size:11px;color:var(--muted)}
-.compare{margin-top:14px}.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.compare-card{background:#121820;border:1px solid var(--line);border-radius:14px;padding:11px;min-width:0}.compare-card .row{flex-direction:column;gap:3px;align-items:flex-start}.compare-card .row strong{font-size:14px}
+.compare{margin-top:14px}.compare-grid{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;width:100%}.compare-card{background:#121820;border:1px solid var(--line);border-radius:14px;padding:9px;min-width:0;overflow:hidden}.compare-card h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.compare-card .row{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:6px 0}.compare-card .row span{font-size:10px}.compare-card .row strong{font-size:13px;white-space:nowrap}
 .compare-card h3{font-size:13px;margin:0 0 8px}.delta{font-weight:800}.foot{color:var(--muted);font-size:10px;line-height:1.5;margin-top:12px}
 .toggleline{display:flex;align-items:center;justify-content:space-between;gap:8px}.toggleline input[type=checkbox]{width:22px;min-height:22px}
 @media(max-width:760px){header{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.inputs{grid-template-columns:1fr 1fr}.kpi .val{font-size:20px}}
 @media(max-width:420px){.inputs{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.app{padding-left:10px;padding-right:10px}.panel{padding:13px}}
+
+@media(max-width:760px){
+  .saved{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .compare-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .compare-card{padding:8px}
+  .compare-card h3{font-size:12px}
+  .compare-card .row strong{font-size:12px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
   <div class="brand"><h1>Salary Role Comparator</h1><p>Compare real take-home value, allowances and pension</p></div>
-  <div class="badge">2026/27 · Local only · v4</div>
+  <div class="badge">2026/27 · Local only · v5</div>
 </header>
 
 <div class="grid">
@@ -89,9 +98,10 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 
   <div class="panel compare">
     <h2>Saved roles & comparison</h2>
-    <div class="saved">
-      <select id="compareA"><option value="">Compare role A…</option></select>
-      <select id="compareB"><option value="">Compare role B…</option></select>
+    <div class="saved" style="margin-bottom:5px"><div style="font-size:11px;color:var(--muted);font-weight:700">ROLE A</div><div style="font-size:11px;color:var(--muted);font-weight:700">ROLE B</div></div>
+<div class="saved">
+      <select id="compareA"><option value="">Choose role A…</option></select>
+      <select id="compareB"><option value="">Choose role B…</option></select>
     </div>
     <div id="comparison" class="compare-grid" style="margin-top:10px"></div>
     <div id="savedList" class="saved-list"></div>
