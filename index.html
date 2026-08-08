@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#11151b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Salary Role Comparator</title>
+<style>
+:root{--bg:#0f1318;--panel:#171d24;--panel2:#1d252e;--line:#313b46;--text:#f3f5f7;--muted:#9eabb8;--accent:#f0b323;--good:#48c78e;--bad:#ff6b6b;--blue:#55a7ff}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:1180px;margin:auto;padding:calc(14px + env(safe-area-inset-top)) 14px calc(26px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}
+.brand h1{font-size:22px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.badge{background:rgba(240,179,35,.12);border:1px solid rgba(240,179,35,.4);color:var(--accent);padding:7px 10px;border-radius:999px;font-size:12px}
+.grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+h2{font-size:15px;margin:0 0 12px;color:#fff}.section-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.inputs{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{min-width:0}
+label{display:block;color:var(--muted);font-size:12px;margin:0 0 5px}
+input,select{width:100%;min-height:44px;background:#10151b;color:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 11px;font-size:16px;outline:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(240,179,35,.12)}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+.help{font-size:11px;color:var(--muted);line-height:1.45;margin-top:7px}
+.buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.btn{border:1px solid var(--line);background:#252e38;color:#fff;border-radius:11px;padding:10px 13px;font-weight:700;font-size:13px}
+.btn.primary{background:var(--accent);color:#17120a;border-color:var(--accent)}.btn.danger{color:#ff9b9b}.btn.small{padding:7px 9px;font-size:12px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.kpi .name{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.kpi .val{font-size:22px;font-weight:800;margin-top:5px}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:3px}
+.breakdown{margin-top:12px}.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #29323b;font-size:13px}.row:last-child{border-bottom:0}.row span:first-child{color:var(--muted)}.positive{color:var(--good)}.negative{color:var(--bad)}.accent{color:var(--accent)}
+.saved{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px}.saved select{min-width:0;font-size:12px;padding-left:7px;padding-right:7px}.saved-list{display:flex;flex-direction:column;gap:7px;margin-top:10px;max-height:220px;overflow:auto}
+.saved-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#121820;border:1px solid var(--line);border-radius:12px;padding:9px}
+.saved-main{min-width:0}.saved-main strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.saved-main span{font-size:11px;color:var(--muted)}
+.compare{margin-top:14px}.compare-grid{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;width:100%}.compare-card{background:#121820;border:1px solid var(--line);border-radius:14px;padding:9px;min-width:0;overflow:hidden}.compare-card h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.compare-card .row{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:6px 0}.compare-card .row span{font-size:10px}.compare-card .row strong{font-size:13px;white-space:nowrap}
+.compare-card h3{font-size:13px;margin:0 0 8px}.delta{font-weight:800}.foot{color:var(--muted);font-size:10px;line-height:1.5;margin-top:12px}
+.toggleline{display:flex;align-items:center;justify-content:space-between;gap:8px}.toggleline input[type=checkbox]{width:22px;min-height:22px}
+@media(max-width:760px){header{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.inputs{grid-template-columns:1fr 1fr}.kpi .val{font-size:20px}}
+@media(max-width:420px){.inputs{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.app{padding-left:10px;padding-right:10px}.panel{padding:13px}}
+
+@media(max-width:760px){
+  .saved{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .compare-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .compare-card{padding:8px}
+  .compare-card h3{font-size:12px}
+  .compare-card .row strong{font-size:12px}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><h1>Salary Role Comparator</h1><p>Compare real take-home value, allowances and pension</p></div>
+  <div class="badge">2026/27 · Local only · v5</div>
+</header>
+
+<div class="grid">
+<section>
+  <div class="panel">
+    <div class="section-title"><h2>Role details</h2><button class="btn small" id="newRole">New role</button></div>
+    <div class="inputs">
+      <div class="field"><label>Role / company name</label><input id="roleName" value="Current role"></div>
+      <div class="field"><label>Tax region</label><select id="region"><option value="rUK">England / Wales / N. Ireland</option><option value="scotland">Scotland</option></select></div>
+      <div class="field"><label>Basic salary (£/year)</label><input id="salary" type="number" min="0" step="100" value="46500"></div>
+      <div class="field"><label>Car allowance (£/year)</label><input id="car" type="number" min="0" step="100" value="0"></div>
+      <div class="field"><label>Employee pension (%)</label><input id="pensionPct" type="number" min="0" max="100" step=".1" value="3"></div>
+      <div class="field"><label>Bonus paid (£/year)</label><input id="bonus" type="number" min="0" step="100" value="0"></div>
+    </div>
+
+    <hr>
+    <h2>Mileage</h2>
+    <div class="inputs">
+      <div class="field"><label>Mileage allowance (£/mile)</label><input id="mileageRate" type="number" min="0" step=".01" value=".45"></div>
+      <div class="field"><label>Business miles/year</label><input id="miles" type="number" min="0" step="100" value="0"></div>
+    </div>
+    <div class="help">For 2026/27, the app treats up to 55p/mile for the first 10,000 car/van business miles and 25p thereafter as HMRC-approved mileage. Any employer payment above that is treated as taxable.</div>
+
+    <hr>
+    <h2>Overnight working away</h2>
+    <div class="inputs">
+      <div class="field"><label>Overnight allowance (£/night)</label><input id="overnightRate" type="number" min="0" step="1" value="0"></div>
+      <div class="field"><label>Number of nights/year</label><input id="nights" type="number" min="0" step="1" value="0"></div>
+      <div class="field"><label>Allowance tax treatment</label><select id="overnightTax"><option value="taxfree">Tax-free / qualifying expense</option><option value="taxable">Taxable payment</option></select></div>
+      <div class="field"><label>Hotel paid by employer?</label><select id="hotelPaid"><option value="yes">Yes</option><option value="no">No</option></select></div>
+    </div>
+    <div class="help" id="overnightHelp">Annual overnight allowance: £0.00. Tax-free treatment depends on the employer's qualifying travel/subsistence arrangement; this switch lets you model either outcome.</div>
+
+    <hr>
+    <h2>Pension projection</h2>
+    <div class="inputs">
+      <div class="field"><label>Projection period (years)</label><input id="years" type="number" min="1" max="50" step="1" value="10"></div>
+      <div class="field"><label>Assumed annual growth (%)</label><input id="growth" type="number" min="-20" max="30" step=".1" value="5"></div>
+    </div>
+
+    <div class="buttons"><button class="btn primary" id="saveRole">Save role</button><button class="btn" id="copyRole">Save as copy</button><button class="btn danger" id="clearAll">Clear saved</button></div>
+  </div>
+
+  <div class="panel compare">
+    <h2>Saved roles & comparison</h2>
+    <div class="saved" style="margin-bottom:5px"><div style="font-size:11px;color:var(--muted);font-weight:700">ROLE A</div><div style="font-size:11px;color:var(--muted);font-weight:700">ROLE B</div></div>
+<div class="saved">
+      <select id="compareA"><option value="">Choose role A…</option></select>
+      <select id="compareB"><option value="">Choose role B…</option></select>
+    </div>
+    <div id="comparison" class="compare-grid" style="margin-top:10px"></div>
+    <div id="savedList" class="saved-list"></div>
+  </div>
+</section>
+
+<aside>
+  <div class="panel" style="position:sticky;top:10px">
+    <h2>Estimated value</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="name">Take-home / month</div><div class="val accent" id="netMonth">£0</div><div class="sub">incl. tax-free allowances</div></div>
+      <div class="kpi"><div class="name">Take-home / year</div><div class="val" id="netYear">£0</div><div class="sub">estimated spendable value</div></div>
+      <div class="kpi"><div class="name">Pension / month</div><div class="val" id="pensionMonth">£0</div><div class="sub">employee contribution</div></div>
+      <div class="kpi"><div class="name">Pension projection</div><div class="val" id="pensionFuture">£0</div><div class="sub" id="pensionFutureSub">after 10 years</div></div>
+    </div>
+
+    <div class="breakdown">
+      <div class="row"><span>Gross taxable pay</span><strong id="taxableGross">£0</strong></div>
+      <div class="row"><span>Income tax</span><strong class="negative" id="tax">−£0</strong></div>
+      <div class="row"><span>Employee NI</span><strong class="negative" id="ni">−£0</strong></div>
+      <div class="row"><span>Pension contribution</span><strong class="negative" id="pensionAnnual">−£0</strong></div>
+      <div class="row"><span>Mileage paid</span><strong id="mileagePaid">£0</strong></div>
+      <div class="row"><span>Tax-free mileage element</span><strong class="positive" id="mileageTaxFree">£0</strong></div>
+      <div class="row"><span>Overnight allowance</span><strong id="overnightAnnual">£0</strong></div>
+      <div class="row"><span>Tax-free overnight element</span><strong class="positive" id="overnightTaxFree">£0</strong></div>
+      <div class="row"><span>Total package cash</span><strong id="packageCash">£0</strong></div>
+    </div>
+    <div class="foot">Estimate only. Pension is modelled as a salary-sacrifice contribution from basic salary, reducing taxable pay and NI. Benefits in kind, student loans, tax-code adjustments, employer pension, company-car tax and other deductions are not included.</div>
+  </div>
+</aside>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const ids=['roleName','region','salary','car','pensionPct','bonus','mileageRate','miles','overnightRate','nights','overnightTax','hotelPaid','years','growth'];
+let currentId=null;
+
+function n(id){return Math.max(0,Number($(id).value)||0)}
+function money(v){return new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0}).format(v||0)}
+function money2(v){return new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',minimumFractionDigits:2,maximumFractionDigits:2}).format(v||0)}
+function allowance(income){
+  if(income<=100000)return 12570;
+  return Math.max(0,12570-(income-100000)/2);
+}
+function taxRUK(income){
+  const pa=allowance(income), t=Math.max(0,income-pa);
+  let tax=0;
+  const basic=Math.min(t,37700); tax+=basic*.20;
+  const higher=Math.min(Math.max(t-37700,0),125140-pa-37700); tax+=Math.max(0,higher)*.40;
+  tax+=Math.max(0,t-(125140-pa))*.45;
+  return tax;
+}
+function taxScotland(income){
+  const pa=allowance(income), t=Math.max(0,income-pa);
+  const grossThresholds=[16537,29526,43662,75000,125140];
+  const rates=[.19,.20,.21,.42,.45,.48];
+  const taxableLimits=grossThresholds.map(x=>Math.max(0,x-pa));
+  let tax=0, prev=0;
+  for(let i=0;i<taxableLimits.length;i++){
+    const width=Math.max(0,taxableLimits[i]-prev);
+    const amt=Math.min(Math.max(t-prev,0),width);
+    tax+=amt*rates[i]; prev=taxableLimits[i];
+  }
+  tax+=Math.max(0,t-prev)*rates[5];
+  return tax;
+}
+function niCalc(income){
+  const pt=12570, uel=50270;
+  return Math.max(0,Math.min(income,uel)-pt)*.08 + Math.max(0,income-uel)*.02;
+}
+function hmrcMileageApproved(miles){
+  return Math.min(miles,10000)*.55 + Math.max(0,miles-10000)*.25;
+}
+function getData(){
+  const d={}; ids.forEach(id=>d[id]=$(id).value); return d;
+}
+function setData(d){
+  ids.forEach(id=>{if(d[id]!==undefined)$(id).value=d[id]});
+  calc();
+}
+function compute(d=getData()){
+  const salary=Math.max(0,+d.salary||0), car=Math.max(0,+d.car||0), bonus=Math.max(0,+d.bonus||0);
+  const pensionPct=Math.max(0,+d.pensionPct||0)/100;
+  const pension=salary*pensionPct;
+  const miles=Math.max(0,+d.miles||0), mileageRate=Math.max(0,+d.mileageRate||0);
+  const mileagePaid=miles*mileageRate, approved=hmrcMileageApproved(miles);
+  const mileageTaxFree=Math.min(mileagePaid,approved), mileageTaxable=Math.max(0,mileagePaid-approved);
+  const nights=Math.max(0,+d.nights||0), overnightRate=Math.max(0,+d.overnightRate||0);
+  const overnight=overnightRate*nights, overnightFree=d.overnightTax==='taxfree'?overnight:0, overnightTaxable=overnight-overnightFree;
+  const taxableBeforePension=salary+car+bonus+mileageTaxable+overnightTaxable;
+  const taxableGross=Math.max(0,taxableBeforePension-pension);
+  const tax=d.region==='scotland'?taxScotland(taxableGross):taxRUK(taxableGross);
+  const ni=niCalc(taxableGross);
+  const netTaxable=taxableGross-tax-ni;
+  const netYear=netTaxable+mileageTaxFree+overnightFree;
+  const packageCash=salary+car+bonus+mileagePaid+overnight;
+  const years=Math.max(1,+d.years||10), growth=(+d.growth||0)/100;
+  const monthly=pension/12, months=years*12, r=Math.pow(1+growth,1/12)-1;
+  const future=r===0?monthly*months:monthly*((Math.pow(1+r,months)-1)/r);
+  return {salary,car,bonus,pension,mileagePaid,mileageTaxFree,mileageTaxable,overnight,overnightFree,overnightTaxable,taxableGross,tax,ni,netYear,netMonth:netYear/12,packageCash,future,years};
+}
+function calc(){
+  const c=compute();
+  $('netMonth').textContent=money2(c.netMonth); $('netYear').textContent=money(c.netYear);
+  $('pensionMonth').textContent=money2(c.pension/12); $('pensionAnnual').textContent='−'+money(c.pension);
+  $('pensionFuture').textContent=money(c.future); $('pensionFutureSub').textContent='after '+c.years+' years';
+  $('taxableGross').textContent=money(c.taxableGross); $('tax').textContent='−'+money(c.tax); $('ni').textContent='−'+money(c.ni);
+  $('mileagePaid').textContent=money(c.mileagePaid); $('mileageTaxFree').textContent=money(c.mileageTaxFree);
+  $('overnightAnnual').textContent=money(c.overnight); $('overnightTaxFree').textContent=money(c.overnightFree);
+  $('packageCash').textContent=money(c.packageCash);
+  $('overnightHelp').textContent='Annual overnight allowance: '+money2(c.overnight)+'. Tax-free treatment depends on the employer’s qualifying travel/subsistence arrangement; this switch lets you model either outcome.';
+  renderComparison();
+}
+function roles(){try{return JSON.parse(localStorage.getItem('salaryRoles_v2')||'[]')}catch(e){return[]}}
+function store(a){localStorage.setItem('salaryRoles_v2',JSON.stringify(a))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function save(copy=false){
+  let a=roles(), d=getData();
+  if(copy || !currentId) currentId=uid();
+  const item={id:currentId,name:d.roleName.trim()||'Unnamed role',data:d,updated:Date.now()};
+  const ix=a.findIndex(x=>x.id===currentId); if(ix>=0)a[ix]=item;else a.unshift(item);
+  store(a); refreshSaved(); 
+}
+function load(id){
+  const x=roles().find(r=>r.id===id); if(!x)return; currentId=x.id; setData(x.data);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function del(id){
+  store(roles().filter(x=>x.id!==id)); if(currentId===id)currentId=null; refreshSaved();
+}
+function refreshSaved(){
+  const a=roles(), list=$('savedList'); list.innerHTML='';
+  for(const x of a){
+    const c=compute(x.data), div=document.createElement('div'); div.className='saved-item';
+    div.innerHTML=`<div class="saved-main"><strong>${escapeHtml(x.name)}</strong><span>${money(c.netMonth)}/month · ${money(c.packageCash)} package</span></div>
+    <div><button class="btn small" data-load="${x.id}">Open</button> <button class="btn small danger" data-del="${x.id}">×</button></div>`;
+    list.appendChild(div);
+  }
+  list.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>load(b.dataset.load));
+  list.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>del(b.dataset.del));
+  for(const sel of [$('compareA'),$('compareB')]){
+    const keep=sel.value; sel.innerHTML='<option value="">Choose saved role…</option>'+a.map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('');
+    if(a.some(x=>x.id===keep))sel.value=keep;
+  }
+  renderComparison();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function renderComparison(){
+  const a=roles(), A=a.find(x=>x.id===$('compareA').value), B=a.find(x=>x.id===$('compareB').value), box=$('comparison');
+  if(!A&&!B){box.innerHTML='<div class="help" style="grid-column:1/-1">Save two roles, then select them above for a side-by-side comparison.</div>';return}
+  const card=x=>{if(!x)return '<div class="compare-card"><h3>—</h3><div class="help">Choose a role</div></div>'; const c=compute(x.data); return `<div class="compare-card"><h3>${escapeHtml(x.name)}</h3>
+    <div class="row"><span>Net / month</span><strong>${money2(c.netMonth)}</strong></div>
+    <div class="row"><span>Net / year</span><strong>${money(c.netYear)}</strong></div>
+    <div class="row"><span>Package cash</span><strong>${money(c.packageCash)}</strong></div>
+    <div class="row"><span>10yr pension*</span><strong>${money(c.future)}</strong></div></div>`};
+  box.innerHTML=card(A)+card(B);
+  if(A&&B){const ca=compute(A.data),cb=compute(B.data),diff=cb.netYear-ca.netYear; box.innerHTML+=`<div class="compare-card" style="grid-column:1/-1"><div class="row"><span>B versus A · annual spendable difference</span><strong class="delta ${diff>=0?'positive':'negative'}">${diff>=0?'+':''}${money(diff)}</strong></div></div>`}
+}
+ids.forEach(id=>$(id).addEventListener('input',calc)); $('compareA').addEventListener('change',renderComparison);$('compareB').addEventListener('change',renderComparison);
+$('saveRole').onclick=()=>save(false); $('copyRole').onclick=()=>save(true);
+$('newRole').onclick=()=>{currentId=null; setData({roleName:'New role',region:'rUK',salary:0,car:0,pensionPct:3,bonus:0,mileageRate:.45,miles:0,overnightRate:0,nights:0,overnightTax:'taxfree',hotelPaid:'yes',years:10,growth:5})};
+$('clearAll').onclick=()=>{if(confirm('Delete all saved roles from this device?')){store([]);currentId=null;refreshSaved()}};
+calc();refreshSaved();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+</script>
+</body>
+</html>
