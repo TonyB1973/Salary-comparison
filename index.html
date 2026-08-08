@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#15181d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Salary Compare">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Salary Role Comparator</title>
+</head>
+<body>
+<header class="topbar">
+  <div><div class="eyebrow">ROLE PACKAGE ANALYSER</div><h1>Salary Comparator</h1></div>
+  <button id="profilesBtn" class="icon-btn" aria-label="Saved roles">☰</button>
+</header>
+
+<main>
+<section class="card">
+  <div class="row between center">
+    <div><label class="small-label" for="roleName">Role name</label><input id="roleName" class="role-name" value="Current role"></div>
+    <span id="saveState" class="pill">Local</span>
+  </div>
+
+  <div class="segmented">
+    <button data-region="rUK" class="active">England / Wales / NI</button>
+    <button data-region="scotland">Scotland</button>
+  </div>
+
+  <div class="grid two">
+    <div class="field"><label>Basic salary</label><div class="money-input"><span>£</span><input id="basicSalary" inputmode="decimal" value="46500"></div><small>Annual gross salary</small></div>
+    <div class="field"><label>Car allowance</label><div class="money-input"><span>£</span><input id="carAllowance" inputmode="decimal" value="0"></div><small>Annual taxable allowance</small></div>
+    <div class="field"><label>Pension</label><div class="suffix-input"><input id="pensionPct" inputmode="decimal" value="3"><span>%</span></div><small>Employee contribution on basic salary</small></div>
+    <div class="field"><label>Bonus paid</label><div class="money-input"><span>£</span><input id="bonus" inputmode="decimal" value="0"></div><small>Annual taxable bonus</small></div>
+    <div class="field"><label>Mileage allowance</label><div class="money-input"><span>£</span><input id="mileageRate" inputmode="decimal" value="0.45"></div><small>Per business mile</small></div>
+    <div class="field"><label>Miles driven / year</label><input id="annualMiles" inputmode="numeric" value="0"><small>Business mileage</small></div>
+    <div class="field full"><label>Overnight stay allowance</label><div class="money-input"><span>£</span><input id="overnightAllowance" inputmode="decimal" value="0"></div><small>Total annual amount</small></div>
+  </div>
+
+  <details class="settings">
+    <summary>Calculation assumptions</summary>
+    <div class="grid two detail-grid">
+      <label class="toggle-row"><span>Mileage is tax-free reimbursement</span><input type="checkbox" id="mileageTaxFree" checked></label>
+      <label class="toggle-row"><span>Overnight allowance is tax-free</span><input type="checkbox" id="overnightTaxFree" checked></label>
+      <div class="field"><label>10-year pension growth</label><div class="suffix-input"><input id="growthPct" inputmode="decimal" value="5"><span>%</span></div></div>
+      <div class="field"><label>Tax year</label><input value="2026/27" disabled></div>
+    </div>
+    <p class="note">Estimate uses the standard Personal Allowance and employee NI category A. Student loans, company-car benefit, tax-code adjustments and other deductions are not included.</p>
+  </details>
+</section>
+
+<section class="hero-output">
+  <span>Estimated monthly take-home</span>
+  <strong id="monthlyTakeHome">£0</strong>
+  <em id="monthlyDelta"></em>
+</section>
+
+<section class="grid outputs">
+  <article class="metric"><span>Annual take-home</span><strong id="annualTakeHome">£0</strong></article>
+  <article class="metric"><span>Monthly pension</span><strong id="monthlyPension">£0</strong></article>
+  <article class="metric"><span>10-year pension value</span><strong id="pension10">£0</strong><small id="pension10Contrib"></small></article>
+  <article class="metric"><span>Total package cash</span><strong id="packageCash">£0</strong><small>Salary + allowances + bonus</small></article>
+</section>
+
+<section class="card breakdown">
+  <h2>Annual breakdown</h2>
+  <div class="break-row"><span>Taxable pay</span><b id="taxableGross">£0</b></div>
+  <div class="break-row"><span>Income tax</span><b id="incomeTax">−£0</b></div>
+  <div class="break-row"><span>National Insurance</span><b id="nationalInsurance">−£0</b></div>
+  <div class="break-row"><span>Pension contribution</span><b id="annualPension">−£0</b></div>
+  <div class="break-row positive"><span>Tax-free mileage / overnight</span><b id="taxFreeExtras">+£0</b></div>
+</section>
+
+<section class="card compare-card">
+  <div class="row between center"><div><div class="eyebrow">COMPARISON</div><h2>Compare with saved role</h2></div><button id="clearCompare" class="text-btn">Clear</button></div>
+  <select id="compareSelect"><option value="">Choose a saved role…</option></select>
+  <div id="compareArea" class="compare-empty">Save at least one role, then select it here.</div>
+</section>
+</main>
+
+<nav class="bottom-actions">
+  <button id="newBtn" class="secondary">New</button>
+  <button id="saveBtn" class="primary">Save role</button>
+  <button id="duplicateBtn" class="secondary">Duplicate</button>
+</nav>
+
+<dialog id="profilesDialog">
+  <div class="dialog-head"><div><div class="eyebrow">LOCAL STORAGE</div><h2>Saved roles</h2></div><button id="closeDialog" class="icon-btn">×</button></div>
+  <div id="profilesList"></div>
+  <p class="note">Saved only in this browser on this device. Clearing Safari website data can remove saved roles.</p>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
